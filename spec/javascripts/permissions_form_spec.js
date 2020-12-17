@@ -1,5 +1,7 @@
+console.log('permissions_form_spec');
 describe('Permissions form and projects selector', function() {
     beforeEach(function() {
+        console.log('before-start');
         this.timeout(10000);
         MagicLamp.load('sops/manage');
 
@@ -33,15 +35,18 @@ describe('Permissions form and projects selector', function() {
 
         Sharing.permissionsTable = this.permissionsTable;
         Sharing.projectsSelector = this.projectsSelector;
+        console.log('before-end');
     });
 
     it('renders a row for the public permission', function () {
+        console.log('1')
         expect($j('#permissions-table tr.public-permission-row').length).to.equal(1);
         expect($j('#permissions-table tr.public-permission-row a.remove-button').length).to.equal(0);
         expect(parseInt($j('#permissions-table tr.public-permission-row:last input[type=radio]:checked').val())).to.equal(Sharing.accessTypes.accessible);
     });
 
     it('renders new rows for new permissions', function (done) { // Note the "done" here
+        console.log('2')
         expect($j('#permissions-table tr.permission-row').length).to.equal(1);
 
         this.permissionsTable.permissions.push({ access_type: Sharing.accessTypes.editing,
@@ -56,6 +61,7 @@ describe('Permissions form and projects selector', function() {
     });
 
     it('changes the public access type', function(done) {
+        console.log('3')
         expect(this.permissionsTable.publicPermission.access_type).to.equal(Sharing.accessTypes.accessible);
 
         click($j('#permissions-table tr.public-permission-row td.privilege-cell.no-access')[0]);
@@ -69,6 +75,7 @@ describe('Permissions form and projects selector', function() {
     });
 
     it('decreases the public access type if the existing setting is clicked', function(done) {
+        console.log('4')
         expect(this.permissionsTable.publicPermission.access_type).to.equal(Sharing.accessTypes.accessible);
 
         click($j('#permissions-table tr.public-permission-row td.privilege-cell.enabled')[0]);
@@ -82,6 +89,7 @@ describe('Permissions form and projects selector', function() {
     });
 
     it('deletes permission rows', function (done) {
+        console.log('4')
         this.permissionsTable.permissions.push({ access_type: Sharing.accessTypes.editing,
             contributor_type: 'Person',
             contributor_id: 1 });
@@ -108,6 +116,7 @@ describe('Permissions form and projects selector', function() {
     });
 
     it('adds a project permission to the table', function (done) {
+        console.log('5')
         expect(this.permissionsTable.permissions.length).to.equal(0);
 
         Sharing.addPermissionForProject({ id: 1, title: 'Project-1' });
