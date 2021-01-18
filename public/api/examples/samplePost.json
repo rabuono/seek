@@ -1,0 +1,52 @@
+{
+    "data": {
+        "type": "samples",
+        "attributes": {
+            "title": "A Maximal Sample",
+            "attribute_map": {
+                "attribute1": "sample string",
+                "attribute2": "10"
+            },
+            "tags": [
+                "tag1",
+                "tag2"
+            ],
+            "policy": {
+                "access": "download",
+                "permissions": [
+                    {
+                        "resource": {
+                            "id": "1973",
+                            "type": "projects"
+                        },
+                        "access": "edit"
+                    }
+                ]
+            }
+        },
+        "relationships": {
+            "creators": {
+                "data": [
+                    {
+                        "id": "1308",
+                        "type": "people"
+                    }
+                ]
+            },
+            "projects": {
+                "data": [
+                    {
+                        "id": "1973",
+                        "type": "projects"
+                    }
+                ]
+            },
+            "sample_type": {
+                "data": {
+                    "id": "13",
+                    "type": "sample_types"
+                }
+            }
+        }
+    }
+}
