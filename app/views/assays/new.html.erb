@@ -34,6 +34,13 @@
                   <%= image("assay_modelling_avatar") %>
                   A <%= t('assays.modelling_analysis') -%>
               <% end %>
+
+              <%= link_to new_assay_path(:class=>:informatics, :assay=>@permitted_params),
+                          :class => 'select_assay_class' do %>
+              <%= image("assay_informatics_avatar",
+		  {:width => "128", :height => "128" } ) %>
+                  A <%= t('assays.informatics_analysis') -%>
+              <% end %>
             </div>
         <% else %>
             <%= suggested_type_modal_boxes %>

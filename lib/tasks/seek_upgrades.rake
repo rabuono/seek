@@ -15,6 +15,7 @@ namespace :seek do
     remove_old_project_join_logs
     fix_negative_programme_role_mask
     db:seed:sample_attribute_types
+    create_informatics_analysis_type
   ]
 
   # these are the tasks that are executes for each upgrade as standard, and rarely change
@@ -169,4 +170,13 @@ namespace :seek do
     end
   end
   
+  task(create_informatics_analysis_type: :environment) do
+    c = AssayClass.find_or_initialize_by(key:'INF')
+    if c.new_record?
+      c.title = I18n.t('assays.informatics_analysis')
+      c.save!
+      puts "New assay class #{I18n.t('assays.informatics_analysis')} created"
+    end
+  end
+
 end

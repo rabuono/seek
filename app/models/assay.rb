@@ -45,6 +45,8 @@ class Assay < ApplicationRecord
   has_many :models, through: :assay_assets, source: :asset, source_type: 'Model', inverse_of: :assays
   has_many :samples, through: :assay_assets, source: :asset, source_type: 'Sample', inverse_of: :assays
   has_many :documents, through: :assay_assets, source: :asset, source_type: 'Document', inverse_of: :assays
+  has_many :workflows, through: :assay_assets, source: :asset, source_type: 'Workflow', inverse_of: :assays
+  has_many :nodes, through: :assay_assets, source: :asset, source_type: 'Node', inverse_of: :assays
 
   has_one :investigation, through: :study
   has_one :external_asset, as: :seek_entity, dependent: :destroy
@@ -95,9 +97,14 @@ class Assay < ApplicationRecord
 
   # returns true if this is an experimental class of assay
   def is_experimental?
-    !assay_class.nil? && assay_class.key == 'EXP'
+    assay_class && assay_class.key == 'EXP'
   end
 
+  # returns true if this is an experimental class of assay
+  def is_informatics?
+    assay_class && assay_class.key == 'INF'
+  end
+  
   # Create or update relationship of this assay to another, with a specific relationship type and version
   def associate(asset, options = {})
     if asset.is_a?(Organism)
@@ -163,7 +170,9 @@ class Assay < ApplicationRecord
   end
 
   def avatar_key
-    type = is_modelling? ? 'modelling' : 'experimental'
+    type = 'modelling' if is_modelling?
+    type = 'experimental' if is_experimental?
+    type = 'informatics' if is_informatics?
     "assay_#{type}_avatar"
   end
 

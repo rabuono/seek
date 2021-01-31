@@ -36,9 +36,10 @@
 
 <%= f.hidden_field :assay_class_id -%>
 
+<% if !@assay.is_informatics? -%>
 <div class="row">
-  <div class="col-sm-<%= @assay.is_modelling? ? '12' : '6' -%>">
-    <div class="form-group">
+    <div class="col-sm-<%= @assay.is_modelling? ? '12' : '6' -%>">
+      <div class="form-group">
       <%= f.label "#{@assay_type_text.capitalize}" %>
       <%= create_suggested_type_popup_link @assay.assay_type_reader.ontology_term_type %>
       <div id="assay_<%= @assay.assay_type_reader.ontology_term_type %>_types_list">
@@ -46,7 +47,7 @@
       </div>
     </div>
   </div>
-  <% unless @assay.is_modelling? -%>
+  <% if @assay.is_experimental? -%>
       <div class="col-sm-6">
         <div class="form-group">
           <%= f.label "Technology type" %>
@@ -58,6 +59,7 @@
       </div>
   <% end -%>
 </div>
+  <% end -%>
 
 <% if User.current_user -%>
     <% if Seek::Config.organisms_enabled %>
@@ -99,6 +101,11 @@
     <%= f.fancy_multiselect :publications, { other_projects_checkbox: true } %>
 
     <%= f.fancy_multiselect :documents, { other_projects_checkbox: true } %>
+
+    <% if @assay.is_informatics? -%>
+      <%= f.fancy_multiselect :workflows, { other_projects_checkbox: true } %>
+      <%= f.fancy_multiselect :nodes, { other_projects_checkbox: true } %>
+    <% end -%>
 <% end -%>
 
 <%= render :partial=> "assets/discussion_links_form", :locals=>{:resource => @assay} -%>

@@ -181,6 +181,7 @@ class AssaysController < ApplicationController
     params.require(:assay).permit(:title, :description, :study_id, :assay_class_id, :assay_type_uri, :technology_type_uri,
                                   :license, :other_creators, { document_ids: []}, { creator_ids: [] },
                                   { scales: [] }, { sop_ids: [] }, { model_ids: [] },
+                                  { workflow_ids: [] }, {node_ids: [] },
                                   { samples_attributes: [:asset_id, :direction] },
                                   { data_files_attributes: [:asset_id, :direction, :relationship_type_id] },
                                   { publication_ids: [] },				  	
@@ -190,6 +191,9 @@ class AssaysController < ApplicationController
       assay_params[:document_ids].select! { |id| Document.find_by_id(id).try(:can_view?) } if assay_params.key?(:document_ids)
       assay_params[:sop_ids].select! { |id| Sop.find_by_id(id).try(:can_view?) } if assay_params.key?(:sop_ids)
       assay_params[:model_ids].select! { |id| Model.find_by_id(id).try(:can_view?) } if assay_params.key?(:model_ids)
+      assay_params[:workflow_ids].select! { |id| Workflow.find_by_id(id).try(:can_view?) } if assay_params.key?(:workflow_ids)
+      assay_params[:node_ids].select! { |id| Node.find_by_id(id).try(:can_view?) } if assay_params.key?(:node_ids)
+
     end
   end
 end

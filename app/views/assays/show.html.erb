@@ -45,6 +45,7 @@
           <b><%= t('study') %>: </b>
           <%= study_link(@assay.study) %>
         </p>
+        <% unless @assay.is_informatics? -%>
         <p id="assay_type">
           <b><%= assay_type_text -%>:</b>
           <%= link_to_assay_type(@assay) -%>
@@ -55,7 +56,7 @@
               <%= link_to_technology_type(@assay) -%>
             </p>
         <% end -%>
-
+        <% end -%>
         <% if Seek::Config.organisms_enabled %>
             <%= list_assay_organisms("Organisms", @assay.assay_organisms,{:id=>"organism"}) %>
         <% end %>

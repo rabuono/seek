@@ -37,9 +37,7 @@
         <li><%= link_to t("sop"), new_sop_path %></li>
         <% if Seek::Config.workflows_enabled %>
           <li><%= link_to t("workflow"), new_workflow_path %></li>
-          <% if false %>
-            <li><%= link_to t("node"), new_node_path %></li>
-          <% end %>
+          <li><%= link_to t("node"), new_node_path %></li>
         <% end %>
         <% if Seek::Config.publications_enabled %>
           <li><%= link_to t("publication"), new_publication_path %></li>
