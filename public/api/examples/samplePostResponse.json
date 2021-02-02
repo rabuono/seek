@@ -1,0 +1,99 @@
+{
+    "data": {
+        "id": "100",
+        "type": "samples",
+        "attributes": {
+            "policy": {
+                "access": "download",
+                "permissions": [
+                    {
+                        "resource": {
+                            "id": "1",
+                            "type": "projects"
+                        },
+                        "access": "edit"
+                    }
+                ]
+            },
+            "title": "sample string",
+            "attribute_map": {
+                "attribute1": "sample string",
+                "attribute2": "10"
+            },
+            "tags": [
+                "tag1",
+                "tag2"
+            ]
+        },
+        "relationships": {
+            "creators": {
+                "data": [
+                    {
+                        "id": "1",
+                        "type": "people"
+                    }
+                ]
+            },
+            "submitter": {
+                "data": [
+                    {
+                        "id": "1",
+                        "type": "people"
+                    }
+                ]
+            },
+            "projects": {
+                "data": [
+                    {
+                        "id": "1",
+                        "type": "projects"
+                    }
+                ]
+            },
+            "sample_type": {
+                "data": {
+                    "id": "14",
+                    "type": "sample_types"
+                }
+            },
+            "data_files": {
+                "data": []
+            },
+            "policy": {
+                "data": {
+                    "access": "download",
+                    "permissions": [
+                        {
+                            "resource": {
+                                "id": "1",
+                                "type": "projects"
+                            },
+                            "access": "edit"
+                        }
+                    ]
+                }
+            },
+            "people": {
+                "data": [
+                    {
+                        "id": "1",
+                        "type": "people"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/samples/100"
+        },
+        "meta": {
+            "created": "2021-02-02T11:11:14.000Z",
+            "modified": "2021-02-02T11:11:13.000Z",
+            "api_version": "0.3",
+            "uuid": "495b12e0-4775-0139-69e0-2cde48001122",
+            "base_url": "http://localhost:3000"
+        }
+    },
+    "jsonapi": {
+        "version": "1.0"
+    }
+}

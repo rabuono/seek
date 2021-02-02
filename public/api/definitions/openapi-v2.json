@@ -236,6 +236,12 @@
             }
         },
         {
+            "name": "samples",
+            "description": {
+                "$ref": "../descriptions/samples.md"
+            }
+        },
+        {
             "name": "workflows",
             "description": {
                 "$ref": "../descriptions/workflows.md"
@@ -302,7 +308,8 @@
             "name": "Samples",
             "tags": [
                 "organisms",
-                "sampleTypes"
+                "sampleTypes",
+                "samples"
             ]
         }
     ],
@@ -3697,7 +3704,7 @@
                 },
                 "tags": [
                     "update",
-                    "sample"
+                    "samples"
                 ],
                 "parameters": [
                     {
@@ -3749,7 +3756,7 @@
                 },
                 "tags": [
                     "delete",
-                    "sample"
+                    "samples"
                 ],
                 "responses": {
                     "403": {

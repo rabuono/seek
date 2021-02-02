@@ -1,11 +1,11 @@
 {
     "data": {
-        "type": "sops",
-        "id": "49",
+        "type": "samples",
+        "id": "100",
         "attributes": {
             "attribute_map": {
-                "attribute1": "sample string",
-                "attribute2": "12.3"
+                "attribute1": "sample string2",
+                "attribute2": "14"
             }
         }
     }
