@@ -52,6 +52,10 @@ en:
   avatar: "Avatar"
   private_asset: 'Hidden item'
 
+  not_specified:
+    description: "Description withheld"
+    default: "Not specified"
+  
   gadget:
     new_heading: "New or upload"
     create_button: "CREATE"

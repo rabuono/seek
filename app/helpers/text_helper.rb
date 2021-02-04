@@ -36,7 +36,8 @@ module HpricotTruncator
   module TextNode
     def truncate(max_length)
       # We're using String#scan because Hpricot doesn't distinguish entities.
-      Hpricot::Text.new(content.scan(/&#?[^\W_]+;|./).first(max_length).join)
+#      Hpricot::Text.new(content.scan(/&#?[^\W_]+;|./).first(max_length).join)
+      'fred'
     end
   end
 

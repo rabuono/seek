@@ -10,7 +10,7 @@ They provided the following details about the <%= t('project') %>
 <%
   title = @project.title.blank? ? 'No title provided' : @project.title
   web_page = @project.web_page.blank? ? 'No web page provided' : @project.web_page
-  description = @project.description.blank? ? 'No description provided' : @project.description
+  description = @project.description.blank? ? I18n.t('not_specified.description') : @project.description
 
 %>
   <%= t('project') %> title: '<%= title %>'

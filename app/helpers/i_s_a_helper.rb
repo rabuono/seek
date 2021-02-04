@@ -77,7 +77,7 @@ module ISAHelper
                               end
 
         if data['description'].blank?
-          data['description'] = item.is_a?(Publication) ? 'No abstract' : 'No description'
+          data['description'] = item.is_a?(Publication) ? 'No abstract' : I18n.t('not_specified.description')
         end
 
         data['name'] = truncate(item.title, length: 110)

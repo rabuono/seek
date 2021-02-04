@@ -181,7 +181,7 @@ module HomesHelper
     image = item[:avatar_image]
     icon = link_to(image, item[:url], class: 'file-type-icon', 'data-tooltip' => tooltip(item[:type]))
     description = item[:description] || item[:abstract]
-    tt = tooltip("#{description.blank? ? 'No description' : description} (#{item[:created_at]})")
+    tt = tooltip("#{description.blank? ? I18n.t('not_specified.description') : description} (#{item[:created_at]})")
     [icon, tt]
   end
 

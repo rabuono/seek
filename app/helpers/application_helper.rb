@@ -210,8 +210,8 @@ module ApplicationHelper
     text = text.to_s
     if text.nil? || text.chomp.empty?
       not_specified_text ||= options[:none_text]
-      not_specified_text ||= 'No description specified' if options[:description]
-      not_specified_text ||= 'Not specified'
+      not_specified_text ||= I18n.t('not_specified.description') if options[:description]
+      not_specified_text ||= I18n.t('not_specified.default')
       res = content_tag(:span, not_specified_text, class: 'none_text')
     else
       text.capitalize! if options[:capitalize]

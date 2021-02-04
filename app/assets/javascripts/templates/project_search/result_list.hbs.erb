@@ -16,7 +16,7 @@
       {{#if attributes.description }}
         {{ truncate attributes.description 300 }}
       {{else}}
-        <span class="none_text">No description</span>
+        <span class="none_text">{{ I18n 'not_specified.description' }}/span>
       {{/if}}
     </td>
 </tr>
