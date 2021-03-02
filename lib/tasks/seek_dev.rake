@@ -261,6 +261,41 @@ namespace :seek_dev do
     end
   end
 
+  task build_basic_test_custom_metadata: :environment do
+    unless CustomMetadataType.where(supported_type: 'Investigation').any?
+      cmt = CustomMetadataType.new(title: 'test Investigation metadata', supported_type:'Investigation')
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'age', sample_attribute_type: SampleAttributeType.where(title:'Integer').first)
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'name', required:true, sample_attribute_type: SampleAttributeType.where(title:'String').first)
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'date', sample_attribute_type: SampleAttributeType.where(title:'Date time').first)
+      cmt.save!
+      puts "Created test CMT for Investigation"
+    else
+      puts "CMT for Investigation already exists"
+    end
+
+    unless CustomMetadataType.where(supported_type: 'Study').any?
+      cmt = CustomMetadataType.new(title: 'test Study metadata', supported_type:'Study')
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'age', sample_attribute_type: SampleAttributeType.where(title:'Integer').first)
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'name', required:true, sample_attribute_type: SampleAttributeType.where(title:'String').first)
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'date', sample_attribute_type: SampleAttributeType.where(title:'Date time').first)
+      cmt.save!
+      puts "Created test CMT for Study"
+    else
+      puts "CMT for Study already exists"
+    end
+
+    unless CustomMetadataType.where(supported_type: 'Assay').any?
+      cmt = CustomMetadataType.new(title: 'test Assay metadata', supported_type:'Assay')
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'age', sample_attribute_type: SampleAttributeType.where(title:'Integer').first)
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'name', required:true, sample_attribute_type: SampleAttributeType.where(title:'String').first)
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'date', sample_attribute_type: SampleAttributeType.where(title:'Date time').first)
+      cmt.save!
+      puts "Created test CMT for Assay"
+    else
+      puts "CMT for Assay already exists"
+    end
+  end
+
   task build_test_custom_metadata: :environment do
     cmt_already_exist = CustomMetadataType.where(supported_type: 'Investigation').any?
     if cmt_already_exist
@@ -410,6 +445,7 @@ namespace :seek_dev do
       cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'age', sample_attribute_type: SampleAttributeType.where(title:'Integer').first)
       cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'name', required:true, sample_attribute_type: SampleAttributeType.where(title:'String').first)
       cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'date', sample_attribute_type: SampleAttributeType.where(title:'Date time').first)
+      cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'date file', sample_attribute_type: SampleAttributeType.where(title:'SEEK Data file').first)
       cmt.save!
       puts "Created test CMT for Study"
     else
@@ -426,6 +462,17 @@ namespace :seek_dev do
     else
       puts "CMT for Assay already exists"
     end
+
+  end
+
+  task make_ontology_study_cmt: :environment do
+    cmt = CustomMetadataType.new(title: 'Study Ontology CMT', supported_type:'Study')
+    cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'name', required:true, sample_attribute_type: SampleAttributeType.where(title:'String').first)
+    cmt.custom_metadata_attributes << CustomMetadataAttribute.new(title: 'ontology',
+                                                                  required:true,
+                                                                  sample_attribute_type:SampleAttributeType.where(title:'Controlled Vocabulary').first,
+                                                                  sample_controlled_vocab: SampleControlledVocab.find(4))
+    cmt.save!
   end
 
   task report_missing_related_items_routes: :environment do
@@ -438,4 +485,5 @@ namespace :seek_dev do
       end
     end
   end
+
 end

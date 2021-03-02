@@ -224,6 +224,7 @@ SEEK::Application.routes.draw do
     member do
       put :set_openid
       post :resend_activation_email
+      post :activate, to: 'users#activate_other', as: 'activate_other'
     end
     resources :oauth_sessions, only: [:index, :destroy]
     resources :identities, only: [:index, :destroy]
@@ -355,6 +356,7 @@ SEEK::Application.routes.draw do
 
   resources :institutions do
     collection do
+      get :request_all
       post :items_for_result
       get  :typeahead
     end
@@ -651,7 +653,12 @@ SEEK::Application.routes.draw do
 
   ### SAMPLE CONTROLLED VOCABS ###
 
-  resources :sample_controlled_vocabs
+  resources :sample_controlled_vocabs do
+    collection do
+      get :typeahead
+      get :fetch_ols_terms
+    end
+  end
 
   ### DOCUMENTS
 
