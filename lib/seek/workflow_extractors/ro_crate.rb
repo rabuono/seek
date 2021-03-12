@@ -13,6 +13,12 @@ module Seek
         @main_workflow_class = main_workflow_class
       end
 
+      def has_tests?
+        open_crate do |crate|
+          crate.test_directory.present?
+        end
+      end
+
       def can_render_diagram?
         open_crate do |crate|
           crate.main_workflow_diagram.present? || main_workflow_extractor(crate)&.can_render_diagram? || abstract_cwl_extractor(crate)&.can_render_diagram?
@@ -66,7 +72,7 @@ module Seek
             m[:other_creators] = a.join(', ')
           end
 
-          source_url = crate['url'] || crate.main_workflow['url']
+          source_url = crate['isBasedOn'] || crate['url'] || crate.main_workflow['url']
           if source_url
             handler = ContentBlob.remote_content_handler_for(source_url)
             if handler.respond_to?(:repository_url)
@@ -92,7 +98,7 @@ module Seek
         end
 
         v = Dir.mktmpdir('ro-crate') do |dir|
-          @opened_crate = ::ROCrate::WorkflowCrateReader.read_zip(@io.is_a?(ContentBlob) ? @io.path : @io, target_dir: dir)
+          @opened_crate = ::ROCrate::WorkflowCrateReader.read_zip(@io.is_a?(ContentBlob) ? @io.data_io_object : @io, target_dir: dir)
           yield @opened_crate
         end
 
