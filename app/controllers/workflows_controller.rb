@@ -7,7 +7,7 @@ class WorkflowsController < ApplicationController
   before_action :workflows_enabled?
   before_action :find_assets, only: [:index]
   before_action :find_and_authorize_requested_item, except: [:index, :new, :create, :preview, :update_annotations_ajax]
-  before_action :find_display_asset, only: [:show, :download, :diagram, :ro_crate]
+  before_action :find_display_asset, only: [:show, :download, :diagram, :ro_crate, :ro_crate_preview]
   before_action :login_required, only: [:create, :create_version, :new_version, :create_content_blob, :create_ro_crate, :create_metadata, :metadata_extraction_ajax, :provide_metadata]
 
   include Seek::Publishing::PublishingCommon

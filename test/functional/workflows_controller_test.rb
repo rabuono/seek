@@ -12,10 +12,13 @@ class WorkflowsControllerTest < ActionController::TestCase
   end
 
   test 'ro-crate preview page' do
-    wf = Factory :workflow, contributor: User.current_user.person
+    wf = Factory :workflow, policy: Factory(:public_policy), contributor: User.current_user.person
     assert wf.can_view?
 
     get :ro_crate_preview, params: { id: wf }
+    
+    refute_nil assigns(:workflow)
+    refute_nil assigns(:display_workflow)
 
     assert_response :success 
   end
@@ -24,7 +27,7 @@ class WorkflowsControllerTest < ActionController::TestCase
     wf = Factory :workflow, contributor: User.current_user.person
     assert wf.can_view?
 
-    get :show, params: { id: wf, format: :rdf }
+    get :show, params: { id: wf, format: :rdf }    
 
     assert_response :not_acceptable
   end
