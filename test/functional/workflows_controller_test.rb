@@ -11,6 +11,15 @@ class WorkflowsControllerTest < ActionController::TestCase
     @project = User.current_user.person.projects.first
   end
 
+  test 'ro-crate preview page' do
+    wf = Factory :workflow, contributor: User.current_user.person
+    assert wf.can_view?
+
+    get :ro_crate_preview, params: { id: wf }
+
+    assert_response :success 
+  end
+
   test 'should return 406 when requesting RDF' do
     wf = Factory :workflow, contributor: User.current_user.person
     assert wf.can_view?

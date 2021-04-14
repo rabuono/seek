@@ -260,6 +260,13 @@ class WorkflowsController < ApplicationController
                   "workflow-#{@workflow.id}-#{@display_workflow.version}.crate.zip")
   end
 
+  def ro_crate_preview
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
   private
 
   def retrieve_content(blob)
