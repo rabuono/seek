@@ -529,7 +529,7 @@ SEEK::Application.routes.draw do
     member do
       get :diagram
       get :ro_crate
-      get :ro_crate_preview
+      get :ro_crate_preview, path: 'ro-crate-preview'
       get :new_version
       post :create_version_metadata
     end
