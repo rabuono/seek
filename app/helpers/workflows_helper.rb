@@ -49,4 +49,19 @@ module WorkflowsHelper
       "#{Seek::Config.galaxy_instance_trs_import_url}&trs_id=#{workflow_version.parent.id}&trs_version=#{workflow_version.version}"
     end
   end
+
+  # the dropdown button for RO Crate
+  def ro_crate_dropdown(workflow, version)
+    dropdown_button('RO-Crate', 'ro_crate_file', menu_options: { id: 'ro-crate-menu' }) do
+      disabled_reason=nil      
+      disabled_reason = 'This workflow is still being processed, check back later.' unless workflow.content_blob.file_exists?
+      content_tag(:li) do
+        icon_link_to 'Download RO-Crate', :download, ro_crate_workflow_path(workflow, version: version, code: params[:code], disabled_reason: disabled_reason)
+      end +
+      content_tag(:li) do
+        icon_link_to 'Preview RO-Crate', :search, ro_crate_preview_workflow_path(workflow, version: version, code: params[:code], disabled_reason: disabled_reason)
+      end
+      
+    end    
+  end
 end
