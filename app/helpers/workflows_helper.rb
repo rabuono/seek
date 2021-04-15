@@ -52,16 +52,17 @@ module WorkflowsHelper
 
   # the dropdown button for RO Crate
   def ro_crate_dropdown(workflow, version)
-    dropdown_button('RO-Crate', 'ro_crate_file', menu_options: { id: 'ro-crate-menu' }) do
-      disabled_reason=nil      
-      disabled_reason = 'This workflow is still being processed, check back later.' unless workflow.content_blob.file_exists?
-      content_tag(:li) do
-        icon_link_to 'Download RO-Crate', :download, ro_crate_workflow_path(workflow, version: version, code: params[:code], disabled_reason: disabled_reason)
-      end +
-      content_tag(:li) do
-        icon_link_to 'Preview RO-Crate', :search, ro_crate_preview_workflow_path(workflow, version: version, code: params[:code], disabled_reason: disabled_reason)
-      end
-      
-    end    
+    if workflow.content_blob.file_exists?
+      dropdown_button('RO-Crate', 'ro_crate_file', menu_options: { id: 'ro-crate-menu' }) do      
+        content_tag(:li) do
+          icon_link_to 'Download RO-Crate', :download, ro_crate_workflow_path(workflow, version: version, code: params[:code])
+        end +
+        content_tag(:li) do
+          icon_link_to 'Preview RO-Crate', :search, ro_crate_preview_workflow_path(workflow, version: version, code: params[:code])
+        end        
+      end    
+    else
+      button_link_to('RO-Crate', :ro_crate_file, nil, disabled_reason: 'This workflow is still being processed, check back later.')
+    end
   end
 end
