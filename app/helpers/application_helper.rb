@@ -499,6 +499,44 @@ module ApplicationHelper
     return Seek::Config.programmes_enabled && Programme.site_managed_programme
   end
 
+  # Take flattened RO-Crate JSON-LD and produce hierarchical structure with Dataset at root.
+  def ro_crate_dataset_schema_org(resource)
+    jsonld = {
+        '@context' => 'http://schema.org',
+        '@id' => polymorphic_url(resource, version: resource.version)
+    }
+
+    resource.ro_crate do |crate|
+      jsonld.reverse_merge!(inline_references(crate, crate.properties))
+    end
+
+    jsonld
+  end
+
+  private
+
+  # Resolve '@id' references in JSONLDHash
+  def inline_references(graph, value)
+    if value.is_a?(Hash)
+      value = ROCrate::JSONLDHash.new(graph, value)
+    end
+
+    if value.is_a?(ROCrate::JSONLDHash)
+      if value.keys.length == 1 && value.key?('@id')
+        obj = value.dereference
+        inline_references(graph, obj.properties) if obj
+      else
+        value.transform_values do |v|
+          inline_references(graph, v)
+        end
+      end
+    elsif value.is_a?(Array)
+      value.map { |v| inline_references(graph, v) }
+    else
+      value
+    end
+  end
+
   PAGE_TITLES = { 'home' => 'Home', 'projects' => I18n.t('project').pluralize, 'institutions' => I18n.t('institution').pluralize,
                   'people' => 'People', 'sessions' => 'Login', 'users' => { 'new' => 'Signup', '*' => 'Account' }, 'search' => 'Search',
                   'assays' => I18n.t('assays.assay').pluralize.capitalize, 'sops' => I18n.t('sop').pluralize, 'models' => I18n.t('model').pluralize, 'data_files' => I18n.t('data_file').pluralize, 'documents' => 'Documents',
