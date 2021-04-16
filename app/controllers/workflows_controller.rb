@@ -261,7 +261,9 @@ class WorkflowsController < ApplicationController
   end
 
   def ro_crate_preview
-    @preview_html = ROCrate::WorkflowCratePreview.new(@display_workflow).generate_html()
+    preview = ROCrate::WorkflowCratePreview.new(@display_workflow)
+    @preview_html = preview.body_html
+    @script = preview.script
     respond_to do |format|
       format.html
     end

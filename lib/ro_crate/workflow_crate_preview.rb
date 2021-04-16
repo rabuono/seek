@@ -2,8 +2,12 @@ module ROCrate
     # requires makehtml to be installed
     class WorkflowCratePreview
 
+        attr_reader :script, :body_html, :html
+
         def initialize(workflow)
             @workflow = workflow
+            @html = generate_html
+            process_html
         end
         
         def generate_html
@@ -27,6 +31,12 @@ module ROCrate
                 line.run
                 ::File.read(::File.join(dir,'ro-crate-preview.html'))
             end
+        end
+
+        def process_html
+            noko = Nokogiri::HTML(@html)
+            @body_html = noko.at_xpath('//body').inner_html
+            @script = noko.at_xpath('//script').to_html
         end
 
     end
