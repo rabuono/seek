@@ -37,6 +37,10 @@ module RdfHelper
         Seek::Errors::ExceptionForwarder.send_notification(exception, data)
         ''
       end
+    elsif content_for?(:schema_org)
+      content_tag :script, type: 'application/ld+json' do
+        content_for :schema_org
+      end
     end
   end
 

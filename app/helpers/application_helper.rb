@@ -503,7 +503,7 @@ module ApplicationHelper
   def ro_crate_dataset_schema_org(resource)
     jsonld = {
         '@context' => 'http://schema.org',
-        '@id' => polymorphic_url(resource, version: resource.version)
+        '@id' => polymorphic_url(resource.is_a_version? ? resource.parent : resource, version: resource.version)
     }
 
     resource.ro_crate do |crate|

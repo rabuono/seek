@@ -1,3 +1,7 @@
+<% content_for :schema_org do %>
+  <%= JSON.pretty_generate(ro_crate_dataset_schema_org(@display_workflow)).html_safe %>
+<% end %>
+
 <h1>RO-Crate !!</h1>
 
 Workflow - <%= @display_workflow.title %>
