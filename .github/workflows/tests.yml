@@ -81,7 +81,7 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
       - name: Install makehtml with npm
-        run: npm i -g makehtml
+        run: sudo npm i -g makehtml
       - name: Create test database
         run: |
           cp test/config/database.github.${{ matrix.database }}.yml config/database.yml
