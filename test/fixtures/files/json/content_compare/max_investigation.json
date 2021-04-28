@@ -13,7 +13,11 @@
       "position": null,
       "title": "A Maximal Investigation",
       "description": "Investigation of the Human Genome",
-      "discussion_links" : null
+      "discussion_links": [{
+        "id": 55,
+        "url": "http://www.slack.com/",
+        "label": "Slack"
+      }]
     },
     "relationships": {
       "creators": {

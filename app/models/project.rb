@@ -20,6 +20,7 @@ class Project < ApplicationRecord
   has_and_belongs_to_many :samples
   has_and_belongs_to_many :sample_types
   has_and_belongs_to_many :documents
+  has_and_belongs_to_many :collections
 
   has_many :work_groups, dependent: :destroy, inverse_of: :project
   has_many :institutions, through: :work_groups, inverse_of: :projects
@@ -74,8 +75,6 @@ class Project < ApplicationRecord
   #  is to be used)
   belongs_to :default_policy, class_name: 'Policy', dependent: :destroy, autosave: true
 
-  acts_as_discussable
-
   # FIXME: temporary handler, projects need to support multiple programmes
   def programmes
     Programme.where(id: programme_id)
@@ -85,13 +84,15 @@ class Project < ApplicationRecord
   alias_attribute :internal_webpage, :wiki_page
 
   has_and_belongs_to_many :organisms, before_add: :update_rdf_on_associated_change, before_remove: :update_rdf_on_associated_change
+  has_and_belongs_to_many :human_diseases, before_add: :update_rdf_on_associated_change, before_remove: :update_rdf_on_associated_change
   has_filter :organism
+  has_filter :human_disease
   has_many :project_subscriptions, dependent: :destroy
 
   has_many :dependent_permissions, class_name: 'Permission', as: :contributor, dependent: :destroy
 
   def assets
-    data_files | sops | models | publications | presentations | documents | workflows | nodes
+    data_files | sops | models | publications | presentations | documents | workflows | nodes | collections
   end
 
   def spreadsheets
@@ -134,6 +135,14 @@ class Project < ApplicationRecord
   def pals
     people_with_the_role(Seek::Roles::PAL)
   end
+    
+  # Returns the columns to be shown on the table view for the resource
+  def columns_default
+    super + ['web_page']
+  end
+  def columns_allowed
+    columns_default + ['wiki_page','site_credentials','start_date','end_date']
+  end
 
   # returns people belong to the admin defined seek 'role' for this project
   def people_with_the_role(role)
@@ -173,7 +182,11 @@ class Project < ApplicationRecord
   # indicates whether this project has a person, or associated user, as a member
   def has_member?(user_or_person)
     user_or_person = user_or_person.try(:person)
-    people.include? user_or_person
+    current_people.include? user_or_person
+  end
+
+  def human_disease_terms
+    human_diseases.collect(&:searchable_terms).flatten
   end
 
   def members= replacement_members
@@ -226,9 +239,9 @@ class Project < ApplicationRecord
   end
 
   def can_delete?(user = User.current_user)
-    user && user.is_admin? && work_groups.collect(&:people).flatten.empty? &&
-      investigations.empty? && studies.empty? && assays.empty? && assets.empty? &&
-      samples.empty? && sample_types.empty?
+    user && can_manage?(user) &&
+        investigations.empty? && studies.empty? && assays.empty? && assets.empty? &&
+        samples.empty? && sample_types.empty?
   end
 
   def self.can_create?(user = User.current_user)
@@ -305,6 +318,15 @@ class Project < ApplicationRecord
     investigations.order(position: :asc)
   end
 
+  def ro_crate_metadata
+    {
+        '@id' => "#project-#{id}",
+        name: title,
+        identifier: rdf_seek_id
+    }.tap do |m|
+      m.merge!(url: web_page) unless web_page.blank?
+    end
+  end
 
   # should put below at the bottom in order to override methods for hierarchies,
   # Try to find a better way for overriding methods regardless where to include the module

@@ -5,6 +5,8 @@ module Seek
       class DataFile < CreativeWork
         include ActionView::Helpers::NumberHelper
 
+        associated_items subject_of: :events
+
         schema_mappings doi: :identifier,
                         distribution: :distribution
 
@@ -13,7 +15,8 @@ module Seek
         end
 
         def distribution
-          return if resource.content_blob && resource.content_blob.show_as_external_link?
+          return unless resource.content_blob
+          return if resource.content_blob.show_as_external_link?
           blob = resource.content_blob
           data = {
             '@type': 'DataDownload',
@@ -35,7 +38,7 @@ module Seek
         end
 
         def schema_type
-          'DataSet'
+          'Dataset'
         end
       end
     end

@@ -188,14 +188,6 @@ class AssaysControllerTest < ActionController::TestCase
     assert_select 'p#technology_type', text: /Binding/, count: 1
   end
 
-  test 'should not show tagging when not logged in' do
-    logout
-    public_assay = Factory(:experimental_assay, policy: Factory(:public_policy))
-    get :show, params: { id: public_assay }
-    assert_response :success
-    assert_select 'div#tags_box', count: 0
-  end
-
   test 'should show modelling assay' do
     assert_difference('ActivityLog.count') do
       get :show, params: { id: assays(:modelling_assay_with_data_and_relationship) }
@@ -307,6 +299,56 @@ class AssaysControllerTest < ActionController::TestCase
     assert_equal 'http://jermontology.org/ontology/JERMOntology#Metabolomics', assay.assay_type_uri
     assert_equal 'carrot', assay.technology_type_label
     assert_equal 'fish', assay.assay_type_label
+  end
+
+  test 'create a assay with custom metadata' do
+    cmt = Factory(:simple_assay_custom_metadata_type)
+    login_as(Factory(:person))
+    assert_difference('Assay.count') do
+
+      assay_attributes = { title: 'test',
+                           study_id: Factory(:study,contributor:User.current_user.person).id,
+                           assay_class_id: assay_classes(:modelling_assay_class).id }
+      cm_attributes = {custom_metadata_attributes:{custom_metadata_type_id: cmt.id,
+                                                   data:{'name':'fred','age':22}}}
+       post :create, params: { assay: assay_attributes.merge(cm_attributes), sharing: valid_sharing }
+    end
+
+    assert assay=assigns(:assay)
+    assert cm = assay.custom_metadata
+    assert_equal cmt, cm.custom_metadata_type
+    assert_equal 'fred',cm.get_attribute_value('name')
+    assert_equal '22',cm.get_attribute_value('age')
+    assert_nil cm.get_attribute_value('date')
+  end
+
+  test 'create a assay with custom metadata validated' do
+    cmt = Factory(:simple_assay_custom_metadata_type)
+    login_as(Factory(:person))
+
+    assert_no_difference('Assay.count') do
+      assay_attributes = { title: 'test',
+                           study_id: Factory(:study,contributor:User.current_user.person).id,
+                           assay_class_id: assay_classes(:modelling_assay_class).id }
+      cm_attributes = {custom_metadata_attributes:{custom_metadata_type_id: cmt.id, data:{'name':'fred','age':'not a number'}}}
+
+
+      post :create, params: { assay: assay_attributes.merge(cm_attributes), sharing: valid_sharing }
+    end
+
+    assert assay=assigns(:assay)
+    refute assay.valid?
+
+    assert_no_difference('Assay.count') do
+      assay_attributes = { title: 'test',
+                           study_id: Factory(:study,contributor:User.current_user.person).id,
+                           assay_class_id: assay_classes(:modelling_assay_class).id }
+      cm_attributes = {custom_metadata_attributes:{custom_metadata_type_id: cmt.id, data:{'name':nil,'age':22}}}
+
+      post :create, params: { assay: assay_attributes.merge(cm_attributes), sharing: valid_sharing }
+    end
+    assert assay=assigns(:assay)
+    refute assay.valid?
   end
 
   test 'should update assay with suggested assay and tech type' do
