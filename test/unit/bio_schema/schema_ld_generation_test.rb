@@ -120,6 +120,56 @@ class SchemaLdGenerationTest < ActiveSupport::TestCase
     assert_equal expected, json
   end
 
+  test 'dataset without content blob' do
+    df = travel_to(@current_time) do
+      df = Factory(:max_data_file, contributor: @person, projects: [@project], policy: Factory(:public_policy), doi: '10.10.10.10/test.1')
+      df.add_annotations('keyword', 'tag', User.first)
+      df.content_blob=nil
+      disable_authorization_checks { 
+        df.content_blob=nil
+        df.save! 
+      }
+      df
+    end
+    
+    df.reload
+    assert_nil df.content_blob
+
+    expected = {
+      '@context' => Seek::BioSchema::Serializer::SCHEMA_ORG,
+      '@type' => 'Dataset',
+      '@id' => "http://localhost:3000/data_files/#{df.id}",
+      'name' => df.title,
+      'description' => df.description,
+      'keywords' => 'keyword',
+      'url' => "http://localhost:3000/data_files/#{df.id}",
+      'creator' => [{ '@type' => 'Person', '@id' => "##{ROCrate::Entity.format_id('Blogs')}", 'name' => 'Blogs' }, { '@type' => 'Person', '@id' => "##{ROCrate::Entity.format_id('Joe')}", 'name' => 'Joe' }],
+      'producer' => [{
+        '@type' => %w[Project Organization],
+        '@id' => "http://localhost:3000/projects/#{@project.id}",
+        'name' => @project.title
+      }],
+      'dateCreated' => @current_time.to_s,
+      'dateModified' => @current_time.to_s,      
+      'identifier' => 'https://doi.org/10.10.10.10/test.1',
+      'subjectOf' => [
+        { '@type' => 'Event',
+          '@id' => "http://localhost:3000/events/#{df.events.first.id}",
+          'name' => df.events.first.title }
+      ],
+      "sdPublisher" => {
+          "@type"=>"Organization",
+          "@id"=>"http://localhost:3000",
+          "name"=>"SysMO-DB",
+          "url"=>"http://localhost:3000"
+      },
+    }
+
+    json = JSON.parse(df.to_schema_ld)
+    assert_equal expected, json
+    
+  end
+
   test 'dataset with weblink' do
     df = travel_to(@current_time) do
       df = Factory(:max_data_file, content_blob: Factory(:website_content_blob),
